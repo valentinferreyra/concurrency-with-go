@@ -5,35 +5,26 @@ import (
 	"sync"
 )
 
-func printSomething(s string, wg *sync.WaitGroup) {
+var msg string
+var wg sync.WaitGroup
+
+func updateMessage(s string, m *sync.Mutex) {
 	defer wg.Done()
 
-	fmt.Println(s)
+	m.Lock()
+	msg = s
+	m.Unlock()
 }
 
 func main() {
-	var wg sync.WaitGroup
+	msg = "Hello, Go!"
 
-	word := []string{
-		"alpha",
-		"beta",
-		"delta",
-		"gamma",
-		"pi",
-		"zeta",
-		"eta",
-		"theta",
-		"epsilon",
-	}
+	var mu sync.Mutex
 
-	wg.Add(len(word))
-
-	for i, w := range word {
-		go printSomething(fmt.Sprintf("%d: %s", i, w), &wg)
-	}
-
+	wg.Add(2)
+	go updateMessage("Hello, Java!", &mu)
+	go updateMessage("Hello, Scala!", &mu)
 	wg.Wait()
 
-	wg.Add(1)
-	printSomething("This is the second thing I'm printing", &wg)
+	fmt.Println(msg)
 }
