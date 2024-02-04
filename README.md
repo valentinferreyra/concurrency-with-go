@@ -3,6 +3,6 @@
 Exercises learned using Go, where I practice the following concurrency concepts:
 
 - WaitGroup
-- Mute
+- Mutex
 - Race Conditions
 - Channels
